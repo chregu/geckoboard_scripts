@@ -1,13 +1,13 @@
 <?php
 
-
+include ("config.php");
 require_once 'vendor/autoload.php';
 use Guzzle\Http\Client;
 
 // Create a client and provide a base URL
 $client = new Client('http://bamboo.liip.ch');
 // Create a request with basic Auth
-$request = $client->get('/rss/createAllBuildsRssFeed.action?feedType=rssAll&buildKey=DIG-DIG2&os_authType=basic')->setAuth('chregu', 'D8Zoec.2vW');
+$request = $client->get('/rss/createAllBuildsRssFeed.action?feedType=rssAll&buildKey=DIG-DIG2&os_authType=basic')->setAuth($bamboo_user, $bamboo_pass);
 // Send the request and get the response
 $response = $request->send();
 $channel = Zend\Feed\Reader\Reader::importString($response->getBody());
@@ -31,11 +31,15 @@ foreach ($channel as $item) {
 
 
 $payload = array(
-  "api_key"=>"c415b6693f5fdedf5a09c34b0ac5666d",
-  "data" => $message
-
- );
+    "api_key"=>$geckoboard_api,
+    "data" => $message
+);
 
 $client = new Client('https://push.geckoboard.com/');
-$request = $client->post('/v1/send/25428-7116fa8f7b8111a14654e793b7aca2f7', null, json_encode($payload));
-$request->send();
+$payload =  json_encode($payload);
+
+if ($payload != file_get_contents("payload.last.txt")) {
+    $request = $client->post('/v1/send/' . $widget_key, null, $payload);
+    $request->send();
+    file_put_contents("payload.last.txt",$payload);
+}
