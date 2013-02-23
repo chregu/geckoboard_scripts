@@ -13,9 +13,10 @@ class Bamboo
      * without push
      * http://localhost/gecko/index.php/bamboo/latest/DIG-DIG2
      * with push
-     * http://localhost/gecko/index.php/bamboo/latest/DIG-DIG2/c415b6693f5fdedf5a09c34b0ac5666d/25428-7116fa8f7b8111a14654e793b7aca2f7
+     * http://localhost/gecko/index.php/bamboo/latest/DIG-DIG2?apikey=c415b6693f5fdedf5a09c34b0ac5666d&widgetkey=25428-7116fa8f7b8111a14654e793b7aca2f7
      */
-    public function latest(Application $app, $key, $apiKey = null, $widgetKey = null)
+
+    public function latest(Request $req, Application $app, $key)
     {
         // Create a client and provide a base URL
         $client = $app['http.client']($app['bamboo.host']);
@@ -45,27 +46,27 @@ class Bamboo
         $payload = array(
             "data" => $message
         );
-
-        $payload = $this->push($payload, $widgetKey, $apiKey, $app);
+        $this->push($payload, $req, $app);
+        $payload =  $app->json($payload);
         return $payload;
     }
 
-    function push(Array $payload, $widgetKey, $apiKey, $app) {
-
+    function push(Array $payload, Request $req, Application $app) {
+        $apiKey    = $req->query->get('apikey');
         if ($apiKey) {
             $payload["api_key"] = $apiKey;
-        }
-        $payload = $app->json($payload);
+            $widgetKey = $req->query->get('widgetkey');
 
-        if ($widgetKey) {
-            $client = $app['http.client']('https://push.geckoboard.com/');
-            $json =  $payload->getContent();
-            if ($json != file_get_contents("../tmp/payload.last.txt")) {
-                $request = $client->post('/v1/send/' . $widgetKey, null, $json);
-                $request->send();
-                file_put_contents("../tmp/payload.last.txt",$json);
+            if ($widgetKey) {
+                $filename = "../tmp/" . md5($req->getUri());
+                $client = $app['http.client']('https://push.geckoboard.com/');
+                $json = json_encode($payload);
+                if (!file_exists($filename) || $json != file_get_contents($filename)) {
+                    $request = $client->post('/v1/send/' . $widgetKey, null, $json);
+                    $request->send();
+                    file_put_contents($filename, $json);
+                }
             }
         }
-        return $payload;
     }
 }
