@@ -16,7 +16,7 @@ include ( __DIR__.'/../config.php');
 
 // definitions
 $app->get('/bamboo/latest/{key}', 'Liip\Geckoboard\Bamboo::latest');
-$app->get('/bamboo/latest/{key}/{apiKey}/{widgetKey}', 'Liip\Geckoboard\Bamboo::latest');
-
+$app->get('/zebra/budgetSum/{key}', 'Liip\Geckoboard\Zebra::budgetSum');
+$app->get('/zebra/budgetCurve/', 'Liip\Geckoboard\Zebra::budgetCurve');
 $app->run();
 
