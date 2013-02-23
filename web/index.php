@@ -8,7 +8,7 @@ $app = new Silex\Application();
 
 // definitions
 $app['debug'] = true;
-$app->get('/bamboo/{key}', 'Liip\Geckoboard\Bamboo::latest');
+$app->get('/bamboo/latest/{key}', 'Liip\Geckoboard\Bamboo::latest');
 
 $app->run();
 
