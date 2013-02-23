@@ -1,6 +1,6 @@
 <?php
 
-$geckoboard_api = '';
-$widget_key = '';
-$bamboo_user = '';
-$bamboo_pass = '';
+$app['bamboo.user'] = '';
+$app['bamboo.pass'] = '';
+$app['bamboo.host'] = 'http://bamboo.liip.ch';
+

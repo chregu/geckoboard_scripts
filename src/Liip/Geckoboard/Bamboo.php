@@ -4,21 +4,23 @@ namespace Liip\Geckoboard;
 
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
-use Guzzle\Http\Client;
 
 
 
 class Bamboo
 {
-    public function latest(Application $app, $key)
+    /**
+     * without push
+     * http://localhost/gecko/index.php/bamboo/latest/DIG-DIG2
+     * with push
+     * http://localhost/gecko/index.php/bamboo/latest/DIG-DIG2/c415b6693f5fdedf5a09c34b0ac5666d/25428-7116fa8f7b8111a14654e793b7aca2f7
+     */
+    public function latest(Application $app, $key, $apiKey = null, $widgetKey = null)
     {
-
-        include ( __DIR__.'/../../../config.php');
-
         // Create a client and provide a base URL
-        $client = new Client('http://bamboo.liip.ch');
+        $client = $app['http.client']($app['bamboo.host']);
         // Create a request with basic Auth
-        $request = $client->get('/rss/createAllBuildsRssFeed.action?feedType=rssAll&buildKey=' . $key . '&os_authType=basic')->setAuth($bamboo_user, $bamboo_pass);
+        $request = $client->get('/rss/createAllBuildsRssFeed.action?feedType=rssAll&buildKey=' . $key . '&os_authType=basic')->setAuth($app['bamboo.user'], $app['bamboo.pass']);
         // Send the request and get the response
         $response = $request->send();
         $channel = \Zend\Feed\Reader\Reader::importString($response->getBody());
@@ -42,17 +44,22 @@ class Bamboo
 
 
         $payload = array(
-        "api_key"=>$geckoboard_api,
-        "data" => $message
+            "data" => $message
         );
+        if ($apiKey) {
+            $payload["api_key"] = $apiKey;
+        }
 
-        $client = new Client('https://push.geckoboard.com/');
+
+        $client = $app['http.client']('https://push.geckoboard.com/');
         $payload = $app->json($payload);
-        $json =  $payload->getContent();
-        if ($json != file_get_contents("../tmp/payload.last.txt")) {
-            $request = $client->post('/v1/send/' . $widget_key, null, $json);
-            $request->send();
-            file_put_contents("../tmp/payload.last.txt",$json);
+        if ($widgetKey) {
+            $json =  $payload->getContent();
+            if ($json != file_get_contents("../tmp/payload.last.txt")) {
+                $request = $client->post('/v1/send/' . $widgetKey, null, $json);
+                $request->send();
+                file_put_contents("../tmp/payload.last.txt",$json);
+            }
         }
         return $payload;
     }
