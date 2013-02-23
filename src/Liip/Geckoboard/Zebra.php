@@ -43,7 +43,8 @@ class Zebra extends \Liip\Geckoboard
             "current" => array("start" => 0, "end" => $used),
             "projected" => array("start" => 0, "end" => $budget * 1.1)
             );
-       // $item["comparative"] = array( "point" => $budget);
+
+        $item["comparative"] = array( "point" => $used + (($values['command']['zero']['total']['totaltime'] * 80) /1000));
 
         $chart['item'] = $item;
         $payload = array('data' => $chart);
