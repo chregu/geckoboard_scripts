@@ -2,7 +2,12 @@
 
     "require": {
           "guzzle/guzzle": "~3.1.1",
-          "zendframework/zend-feed": "dev-master"
+          "zendframework/zend-feed": "dev-master",
+          "silex/silex": "1.0.*@dev"
+
      },
+      "autoload": {
+        "psr-0": {"Liip": "src/"}
+    },
     "minimum-stability": "dev"
 }
