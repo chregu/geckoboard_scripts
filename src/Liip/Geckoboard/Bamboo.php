@@ -42,18 +42,23 @@ class Bamboo
             break;
         }
 
-
         $payload = array(
             "data" => $message
         );
+
+        $payload = $this->push($payload, $widgetKey, $apiKey, $app);
+        return $payload;
+    }
+
+    function push(Array $payload, $widgetKey, $apiKey, $app) {
+
         if ($apiKey) {
             $payload["api_key"] = $apiKey;
         }
-
-
-        $client = $app['http.client']('https://push.geckoboard.com/');
         $payload = $app->json($payload);
+
         if ($widgetKey) {
+            $client = $app['http.client']('https://push.geckoboard.com/');
             $json =  $payload->getContent();
             if ($json != file_get_contents("../tmp/payload.last.txt")) {
                 $request = $client->post('/v1/send/' . $widgetKey, null, $json);
