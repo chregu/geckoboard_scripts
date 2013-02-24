@@ -15,14 +15,17 @@ class Zebra extends \Liip\Geckoboard
     public function budgetSum(Application $app,  Request $req, $key) {
         //https://zebra.liip.ch/en/project/1480.json
 
-/*
+
         $client = $app['http.client']('https://zebra.liip.ch/');
         $request = $client->get('en/project/'.$key . '.json?token=' . $app['zebra.token']);
+        $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYHOST, false);
+        $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYPEER, false);
+
         $response = $request->send();
   //      file_put_contents("/tmp/foo.txt",$response->getBody());
         $values = json_decode($response->getBody(), true);
-*/
-        $values =  json_decode(file_get_contents("/tmp/foo.txt"), true);
+
+//        $values =  json_decode(file_get_contents("/tmp/foo.txt"), true);
         $project = $values['command']['project'];
         $budget = $project['budget'] / 1000;
         $max = $budget * 1.2;
