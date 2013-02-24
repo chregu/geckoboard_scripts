@@ -3,9 +3,9 @@
     "require": {
           "guzzle/guzzle": "~3.1.1",
           "zendframework/zend-feed": "dev-master",
+          "zendframework/zendgdata": "dev-master",
           "abhinavsingh/jaxl": "3.*@dev",
           "silex/silex": "1.0.*@dev"
-
      },
       "autoload": {
         "psr-0": {"Liip": "src/"}

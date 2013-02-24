@@ -3,4 +3,6 @@
 $app['bamboo.user'] = '';
 $app['bamboo.pass'] = '';
 $app['bamboo.host'] = 'http://bamboo.liip.ch';
-
+$app['zebra.token'] = 'user:key';
+$app['google.user'] = '';
+$app['google.pass'] = '';
