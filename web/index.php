@@ -18,6 +18,7 @@ include ( __DIR__.'/../config.php');
 $app->get('/bamboo/latest/{key}', 'Liip\Geckoboard\Bamboo::latest');
 $app->get('/zebra/budgetSum/{key}', 'Liip\Geckoboard\Zebra::budgetSum');
 $app->get('/zebra/budgetCurve/', 'Liip\Geckoboard\Zebra::budgetCurve');
+$app->get('/zebra/highcharts', 'Liip\Geckoboard\Zebra::highcharts');
 $app->get('/drive/geckometer/{key}', 'Liip\Geckoboard\Drive::geckometer');
 $app->get('/drive/geckometer/{key}/{topleft}', 'Liip\Geckoboard\Drive::geckometer');
 
