@@ -21,15 +21,28 @@ class Zebra extends \Liip\Geckoboard
         $values = json_decode($body, true);
 
         $project = $values['command']['project'];
-        $budget = $project['budget'] / 1000;
+        $budget = $req->query->get('budget');
+        if (!$budget) {
+            $budget = $project['budget'];
+        }
+
+        $budget = $budget / 1000;
+
         $max = $budget * 1.2;
+
+
         $used = $values['command']['total']['cost']['sum'] /1000;
+        $inclZero = $used + (($values['command']['zero']['total']['totaltime'] * 80) /1000);
+        if ($inclZero * 1.06 > $max) {
+            $max = $inclZero * 1.1;
+        }
 
         $chart = array();
 
         $chart["orientation"] = "horizontal";
 
         $item = array("label" => "Project X", "sublabel" => "Budget: " . round($budget) . " - " . round((100 * $used)/$budget) . "% used");
+
         $item["axis"] = array("point" => array(0, round($max * 0.16) , round($max * 0.33) , round($max * 0.5), round($max * 0.66), round($max * 0.833333), round($max)));
         $item["range"] = array(
             array("color" => "green",   "start" => 0,   "end" => $budget),
@@ -41,7 +54,7 @@ class Zebra extends \Liip\Geckoboard
             "projected" => array("start" => 0, "end" => $budget * 1.1)
             );
 
-        $item["comparative"] = array( "point" => $used + (($values['command']['zero']['total']['totaltime'] * 80) /1000));
+        $item["comparative"] = array( "point" => $inclZero);
 
         $chart['item'] = $item;
         $this->push($chart, $req, $app);
