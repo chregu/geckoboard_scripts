@@ -50,10 +50,9 @@ class Zebra extends \Liip\Geckoboard
         $item["comparative"] = array( "point" => $used + (($values['command']['zero']['total']['totaltime'] * 80) /1000));
 
         $chart['item'] = $item;
-        $payload = array('data' => $chart);
-        $this->push($payload, $req, $app);
+        $this->push($chart, $req, $app);
 
-        return  $app->json($payload);
+        return  $app->json($chart);
 
     }
 
@@ -137,11 +136,5 @@ class Zebra extends \Liip\Geckoboard
         $values = json_decode($response->getBody());
         return $app->json($values);
 
-        $payload = array(
-            "data" => $message
-        );
-        $this->push($payload, $req, $app);
-        $payload =  $app->json($payload);
-        return $payload;
     }
 }

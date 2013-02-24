@@ -43,11 +43,8 @@ class Bamboo extends \Liip\Geckoboard
             break;
         }
 
-        $payload = array(
-            "data" => $message
-        );
-        $this->push($payload, $req, $app);
-        $payload =  $app->json($payload);
+        $this->push($message, $req, $app);
+        $payload =  $app->json($message);
         return $payload;
     }
 

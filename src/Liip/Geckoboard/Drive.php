@@ -44,10 +44,9 @@ class Drive extends \Liip\Geckoboard
         $chart['max'] = array("text" => $cellFeed[2]->getCell()->getText(), "value" => $cellFeed[3]->getCell()->getText());
         $chart['item'] = $cellFeed[5]->getCell()->getText();
 
-        $payload = array('data' => $chart);
-        $this->push($payload, $req, $app);
+        $this->push($chart, $req, $app);
 
-        return  $app->json($payload);
+        return  $app->json($chart);
 
     }
 }

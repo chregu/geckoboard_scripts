@@ -11,6 +11,9 @@ class Geckoboard
 {
     function push(Array $payload, Request $req, Application $app) {
         $apiKey    = $req->query->get('apikey');
+
+        $payload = array('data' => $payload);
+
         if ($apiKey) {
             $payload["api_key"] = $apiKey;
             $widgetKey = $req->query->get('widgetkey');
