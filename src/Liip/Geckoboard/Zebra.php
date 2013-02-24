@@ -53,6 +53,10 @@ class Zebra extends \Liip\Geckoboard
         return  $app->json($payload);
 
     }
+
+    /**
+     * Not finished
+     */
     public function budgetLine(Request $req, Application $app, $key)
     {
         // Create a client and provide a base URL
@@ -74,24 +78,5 @@ class Zebra extends \Liip\Geckoboard
         $this->push($payload, $req, $app);
         $payload =  $app->json($payload);
         return $payload;
-    }
-// http://localhost/gecko/index.php/zebra/budgetCurve?filters=option_selector%3D%26users%255B0%255D%3D%252A%26projects%255B0%255D%3D1480%26activities%255B0%255D%3D%252A%26start%3D2012-11-12%26end%3D2013-02-04%26token%3Dchregu%3A562753f53edb1e30eb35ae91d78e984b0&dailybudget=&budget=270000
-    function push(Array $payload, Request $req, Application $app) {
-        $apiKey    = $req->query->get('apikey');
-        if ($apiKey) {
-            $payload["api_key"] = $apiKey;
-            $widgetKey = $req->query->get('widgetkey');
-
-            if ($widgetKey) {
-                $filename = "../tmp/" . md5($req->getUri());
-                $client = $app['http.client']('https://push.geckoboard.com/');
-                $json = json_encode($payload);
-                if (!file_exists($filename) || $json != file_get_contents($filename)) {
-                    $request = $client->post('/v1/send/' . $widgetKey, null, $json);
-                    $request->send();
-                    file_put_contents($filename, $json);
-                }
-            }
-        }
     }
 }
