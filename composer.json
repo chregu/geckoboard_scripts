@@ -5,6 +5,7 @@
           "zendframework/zend-feed": "dev-master",
           "zendframework/zendgdata": "dev-master",
           "abhinavsingh/jaxl": "3.*@dev",
+          "doctrine/cache": "dev-master",
           "silex/silex": "1.0.*@dev"
      },
       "autoload": {

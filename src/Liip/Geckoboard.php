@@ -19,13 +19,13 @@ class Geckoboard
             $widgetKey = $req->query->get('widgetkey');
 
             if ($widgetKey) {
-                $filename = "../tmp/" . md5($req->getUri());
+                $cachehash = "spush" . md5($req->getUri());
                 $client = $app['http.client']('https://push.geckoboard.com/');
                 $json = json_encode($payload);
-                if (!file_exists($filename) || $json != file_get_contents($filename)) {
+                if ($json != $app['cache']->fetch($cachehash)) {
                     $request = $client->post('/v1/send/' . $widgetKey, null, $json);
                     $request->send();
-                    file_put_contents($filename, $json);
+                    $app['cache']->save($cachehash,$json);
                 }
             }
         }

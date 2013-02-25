@@ -10,6 +10,12 @@ $app = new Silex\Application();
 $app['http.client'] = $app->protect(function ($host) {
     return new \Guzzle\Http\Client($host);
 });
+
+$app['cache'] = $app->share(function ($host) {
+   return new \Doctrine\Common\Cache\FilesystemCache(__DIR__.'/../tmp/');
+
+});
+
 $app['debug'] = true;
 
 include ( __DIR__.'/../config.php');
